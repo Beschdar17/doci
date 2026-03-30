@@ -14,7 +14,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/95 backdrop-blur-sm">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+      <nav className="mx-auto flex h-24 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         {/* Logo — links */}
         <Link href="/" onClick={() => setIsOpen(false)} className="shrink-0">
           <Logo />

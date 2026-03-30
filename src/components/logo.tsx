@@ -12,7 +12,7 @@ export function Logo({ className }: LogoProps) {
       <img
         src="/logo.png"
         alt="DOCI — Trockenbau, Bauunternehmer, Boden Leger"
-        className="h-10 w-auto"
+        className="h-20 w-auto"
       />
     </div>
   );
