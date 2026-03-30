@@ -1,24 +1,35 @@
 import { NextResponse } from "next/server";
-import { readFile, writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { put, head, list } from "@vercel/blob";
 import type { GalleryItem } from "@/lib/gallery-data";
 import { DEFAULT_GALLERY_ITEMS } from "@/lib/gallery-data";
 
-const DATA_DIR = join(process.cwd(), "data");
-const DATA_FILE = join(DATA_DIR, "gallery.json");
+const GALLERY_DATA_PATH = "data/gallery.json";
 
 async function getGalleryItems(): Promise<GalleryItem[]> {
   try {
-    const data = await readFile(DATA_FILE, "utf-8");
-    return JSON.parse(data) as GalleryItem[];
+    // Prüfen ob die Datei im Blob Store existiert
+    const blobs = await list({ prefix: "data/gallery" });
+    const existing = blobs.blobs.find((b) => b.pathname === GALLERY_DATA_PATH);
+
+    if (!existing) {
+      return DEFAULT_GALLERY_ITEMS;
+    }
+
+    const res = await fetch(existing.url);
+    const data = (await res.json()) as GalleryItem[];
+    return data;
   } catch {
     return DEFAULT_GALLERY_ITEMS;
   }
 }
 
 async function saveGalleryItems(items: GalleryItem[]): Promise<void> {
-  await mkdir(DATA_DIR, { recursive: true });
-  await writeFile(DATA_FILE, JSON.stringify(items, null, 2), "utf-8");
+  const json = JSON.stringify(items, null, 2);
+  await put(GALLERY_DATA_PATH, json, {
+    access: "public",
+    contentType: "application/json",
+    addRandomSuffix: false,
+  });
 }
 
 // GET — Alle Gallery-Items laden
@@ -66,9 +77,11 @@ export async function POST(request: Request) {
     await saveGalleryItems(updated);
 
     return NextResponse.json({ success: true, data: newItem }, { status: 201 });
-  } catch {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Ungültige Anfrage.";
     return NextResponse.json(
-      { success: false, error: "Ungültige Anfrage." },
+      { success: false, error: message },
       { status: 400 }
     );
   }
@@ -100,9 +113,11 @@ export async function DELETE(request: Request) {
     await saveGalleryItems(filtered);
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Ungültige Anfrage.";
     return NextResponse.json(
-      { success: false, error: "Ungültige Anfrage." },
+      { success: false, error: message },
       { status: 400 }
     );
   }
