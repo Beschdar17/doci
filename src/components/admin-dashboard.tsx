@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ImageUpload } from "@/components/image-upload";
 import { GALLERY_CATEGORIES } from "@/lib/constants";
 import type { GalleryItem } from "@/lib/gallery-data";
 
@@ -58,6 +59,10 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
       setFormError("Bitte geben Sie einen Titel ein.");
       return;
     }
+    if (!beforeImage && !afterImage) {
+      setFormError("Bitte laden Sie mindestens ein Bild hoch.");
+      return;
+    }
 
     setSaving(true);
     setFormError("");
@@ -69,8 +74,8 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
         body: JSON.stringify({
           title: title.trim(),
           category,
-          beforeImage: beforeImage.trim(),
-          afterImage: afterImage.trim(),
+          beforeImage,
+          afterImage,
         }),
       });
 
@@ -170,27 +175,19 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 </select>
               </div>
 
-              <div>
-                <Label htmlFor="before-url">Vorher-Bild URL</Label>
-                <Input
-                  id="before-url"
-                  placeholder="https://..."
-                  value={beforeImage}
-                  onChange={(e) => setBeforeImage(e.target.value)}
-                  className="mt-1"
-                />
-              </div>
+              {/* Vorher-Bild Upload */}
+              <ImageUpload
+                label="Vorher-Foto *"
+                value={beforeImage}
+                onChange={setBeforeImage}
+              />
 
-              <div>
-                <Label htmlFor="after-url">Nachher-Bild URL</Label>
-                <Input
-                  id="after-url"
-                  placeholder="https://..."
-                  value={afterImage}
-                  onChange={(e) => setAfterImage(e.target.value)}
-                  className="mt-1"
-                />
-              </div>
+              {/* Nachher-Bild Upload */}
+              <ImageUpload
+                label="Nachher-Foto *"
+                value={afterImage}
+                onChange={setAfterImage}
+              />
 
               {formError && (
                 <p role="alert" className="text-sm text-doci-red">
@@ -235,38 +232,65 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between rounded-lg border bg-white p-4"
+                  className="overflow-hidden rounded-lg border bg-white"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-doci-red-light">
-                      <ImageIcon className="h-6 w-6 text-doci-red" />
+                  {/* Bild-Vorschau */}
+                  {(item.beforeImage || item.afterImage) && (
+                    <div className="grid grid-cols-2">
+                      <div className="aspect-video bg-stone-100">
+                        {item.beforeImage ? (
+                          <img
+                            src={item.beforeImage}
+                            alt="Vorher"
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-xs text-stone-400">
+                            Kein Vorher-Bild
+                          </div>
+                        )}
+                      </div>
+                      <div className="aspect-video bg-doci-red-light">
+                        {item.afterImage ? (
+                          <img
+                            src={item.afterImage}
+                            alt="Nachher"
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-xs text-doci-red/40">
+                            Kein Nachher-Bild
+                          </div>
+                        )}
+                      </div>
                     </div>
+                  )}
+
+                  <div className="flex items-center justify-between p-4">
                     <div>
                       <p className="font-medium text-doci-dark">
                         {item.title}
                       </p>
                       <p className="text-sm text-doci-gray">
                         {item.category}
-                        {item.beforeImage && " · Vorher-Bild ✓"}
-                        {item.afterImage && " · Nachher-Bild ✓"}
                       </p>
                     </div>
-                  </div>
 
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDelete(item.id)}
-                    disabled={deletingId === item.id}
-                    className="text-doci-gray hover:text-doci-red"
-                    aria-label={`${item.title} löschen`}
-                  >
-                    {deletingId === item.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-4 w-4" />
-                    )}
-                  </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(item.id)}
+                      disabled={deletingId === item.id}
+                      className="text-doci-gray hover:text-doci-red"
+                      aria-label={`${item.title} löschen`}
+                    >
+                      {deletingId === item.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
