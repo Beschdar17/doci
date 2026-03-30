@@ -1,25 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { ImageIcon, ArrowLeftRight } from "lucide-react";
+import { ImageIcon, ArrowLeftRight, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/section-heading";
 import { GALLERY_CATEGORIES } from "@/lib/constants";
-import { DEFAULT_GALLERY_ITEMS, type GalleryItem } from "@/lib/gallery-data";
+import type { GalleryItem } from "@/lib/gallery-data";
 
-interface GalleryProps {
-  items?: GalleryItem[];
-}
-
-export function Gallery({ items = DEFAULT_GALLERY_ITEMS }: GalleryProps) {
+export function Gallery() {
+  const [items, setItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("Alle");
+
+  useEffect(() => {
+    fetch("/api/admin/gallery")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setItems(data.data);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtered =
     activeCategory === "Alle"
       ? items
       : items.filter((item) => item.category === activeCategory);
+
+  // Nur Einträge mit mindestens einem Bild anzeigen
+  const withImages = filtered.filter(
+    (item) => item.beforeImage || item.afterImage
+  );
 
   return (
     <div className="py-12 md:py-20">
@@ -43,14 +58,21 @@ export function Gallery({ items = DEFAULT_GALLERY_ITEMS }: GalleryProps) {
           ))}
         </div>
 
-        {/* Grid */}
-        {filtered.length === 0 ? (
-          <p className="text-center text-doci-gray">
-            Keine Projekte in dieser Kategorie vorhanden.
-          </p>
+        {/* Loading */}
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-doci-red" />
+          </div>
+        ) : withImages.length === 0 ? (
+          <div className="py-16 text-center">
+            <ImageIcon className="mx-auto mb-3 h-12 w-12 text-doci-gray/40" />
+            <p className="text-doci-gray">
+              Noch keine Projekte vorhanden.
+            </p>
+          </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((item, index) => (
+            {withImages.map((item, index) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, scale: 0.95 }}
