@@ -12,13 +12,12 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-3">
           {/* Company */}
           <div>
-            <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-doci-red">
-                <span className="text-lg font-bold text-white">D</span>
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white">
-                DOCI
-              </span>
+            <div className="mb-4">
+              <img
+                src="/logo.png"
+                alt="DOCI"
+                className="h-10 w-auto brightness-0 invert"
+              />
             </div>
             <p className="text-sm text-white/60">
               Ihr kompetenter Partner für Stuckateur- und Sanierungsarbeiten.

@@ -54,7 +54,7 @@ export const COMPANY_INFO = {
   street: "Musterstraße 1",
   zip: "12345",
   city: "Musterstadt",
-  phone: "+49 (0) 123 456 789",
+  phone: "0176 62567186",
   email: "info@doci.de",
   geschaeftsfuehrer: "Max Mustermann",
   registergericht: "Amtsgericht Musterstadt",
