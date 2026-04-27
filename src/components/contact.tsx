@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion } from "motion/react";
-import { MapPin, Phone, Mail, Send, CheckCircle2 } from "lucide-react";
+import { MapPin, Phone, Mail, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +15,7 @@ interface FormData {
   email: string;
   phone: string;
   message: string;
+  website: string;
 }
 
 interface FormErrors {
@@ -29,9 +30,12 @@ export function Contact() {
     email: "",
     phone: "",
     message: "",
+    website: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -52,12 +56,36 @@ export function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
-    // TODO: Backend-Integration (z.B. E-Mail-Versand via API-Route)
-    setSubmitted(true);
+    setLoading(true);
+    setSubmitError(null);
+
+    try {
+      const res = await fetch("/api/contact.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = (await res.json()) as { success: boolean; error?: string };
+
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setSubmitError(
+          data.error ?? "Versand fehlgeschlagen. Bitte später erneut versuchen."
+        );
+      }
+    } catch {
+      setSubmitError(
+        "Netzwerkfehler. Bitte später erneut versuchen oder per Telefon kontaktieren."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateField = (field: keyof FormData, value: string) => {
@@ -164,9 +192,42 @@ export function Contact() {
                   )}
                 </div>
 
-                <Button type="submit" size="lg" className="w-full sm:w-auto">
-                  <Send className="mr-2 h-4 w-4" />
-                  Nachricht senden
+                {/* Honeypot — für Bots, von echten Nutzern nicht sichtbar */}
+                <div className="hidden" aria-hidden="true">
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.website}
+                    onChange={(e) => updateField("website", e.target.value)}
+                  />
+                </div>
+
+                {submitError && (
+                  <p role="alert" className="rounded-lg border border-doci-red/30 bg-doci-red-light p-3 text-sm text-doci-red">
+                    {submitError}
+                  </p>
+                )}
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Wird gesendet…
+                    </>
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" />
+                      Nachricht senden
+                    </>
+                  )}
                 </Button>
               </form>
             )}

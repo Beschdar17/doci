@@ -1,4 +1,4 @@
-import { existsSync, renameSync, rmSync } from "node:fs";
+import { existsSync, renameSync, rmSync, cpSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -55,6 +55,14 @@ try {
     },
     cwd: root,
   });
+
+  const extras = join(root, "ionos-extras");
+  const out = join(root, "out");
+  if (existsSync(extras)) {
+    cpSync(extras, out, { recursive: true });
+    console.log("✓ ionos-extras → out/ kopiert");
+  }
+
   console.log(`\n✓ Static build complete → out/  (API: ${apiBase})`);
 } catch (err) {
   console.error("\n✗ Static build failed");
