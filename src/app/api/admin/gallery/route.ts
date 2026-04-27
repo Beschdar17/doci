@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
-import { put, head, list } from "@vercel/blob";
+import { put, list } from "@vercel/blob";
 import type { GalleryItem } from "@/lib/gallery-data";
 import { DEFAULT_GALLERY_ITEMS } from "@/lib/gallery-data";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const GALLERY_DATA_PATH = "data/gallery.json";
 
 async function getGalleryItems(): Promise<GalleryItem[]> {
   try {
-    // Prüfen ob die Datei im Blob Store existiert
     const blobs = await list({ prefix: "data/gallery" });
     const existing = blobs.blobs.find((b) => b.pathname === GALLERY_DATA_PATH);
 
@@ -15,7 +17,8 @@ async function getGalleryItems(): Promise<GalleryItem[]> {
       return DEFAULT_GALLERY_ITEMS;
     }
 
-    const res = await fetch(existing.url);
+    const cacheBust = `?t=${Date.now()}`;
+    const res = await fetch(existing.url + cacheBust, { cache: "no-store" });
     const data = (await res.json()) as GalleryItem[];
     return data;
   } catch {
@@ -30,12 +33,18 @@ async function saveGalleryItems(items: GalleryItem[]): Promise<void> {
     contentType: "application/json",
     addRandomSuffix: false,
     allowOverwrite: true,
+    cacheControlMaxAge: 0,
   });
 }
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
+};
+
+const NO_CACHE_HEADERS = {
+  ...CORS_HEADERS,
+  "Cache-Control": "no-store, no-cache, must-revalidate",
 };
 
 export async function OPTIONS() {
@@ -47,7 +56,7 @@ export async function GET() {
   const items = await getGalleryItems();
   return NextResponse.json(
     { success: true, data: items },
-    { headers: CORS_HEADERS }
+    { headers: NO_CACHE_HEADERS }
   );
 }
 
