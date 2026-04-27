@@ -10,16 +10,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DOCI | Stuckateur & Sanierung",
+  title: "DOCI | Trockenbau & Sanierung",
   description:
-    "DOCI — Ihr kompetenter Partner für Stuckateur- & Malerarbeiten, Trockenbau, Innendämmung, Altbausanierung, Tapezierarbeiten und Bodenlegearbeiten.",
+    "DOCI — Ihr kompetenter Partner für Trockenbau, Innendämmung, Altbausanierung und Bodenlegearbeiten.",
   keywords: [
-    "Stuckateur",
-    "Malerarbeiten",
     "Trockenbau",
     "Innendämmung",
     "Altbausanierung",
-    "Tapezierarbeiten",
     "Bodenlegearbeiten",
     "Sanierung",
   ],

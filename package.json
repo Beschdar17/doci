@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev --port 4000",
     "build": "next build",
+    "build:static": "node scripts/build-static.mjs",
+    "deploy:ionos": "bash scripts/deploy-ionos.sh",
     "start": "next start",
     "lint": "next lint"
   },

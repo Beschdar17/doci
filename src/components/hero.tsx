@@ -7,7 +7,6 @@ import { MoveRight, PhoneCall } from "lucide-react";
 import Link from "next/link";
 
 const titles = [
-  "Stuckateur & Maler",
   "Trockenbau",
   "Altbausanierung",
   "Innendämmung",
@@ -77,8 +76,8 @@ export function Hero() {
 
           <p className="text-base md:text-xl leading-relaxed tracking-tight text-doci-gray max-w-2xl text-center">
             DOCI steht für erstklassige Handwerksarbeit in den Bereichen
-            Stuckateur, Trockenbau, Sanierung und Bodenarbeiten. Persönlich,
-            zuverlässig und termingerecht.
+            Trockenbau, Sanierung und Bodenarbeiten. Persönlich, zuverlässig
+            und termingerecht.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

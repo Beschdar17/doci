@@ -33,10 +33,22 @@ async function saveGalleryItems(items: GalleryItem[]): Promise<void> {
   });
 }
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
 // GET — Alle Gallery-Items laden
 export async function GET() {
   const items = await getGalleryItems();
-  return NextResponse.json({ success: true, data: items });
+  return NextResponse.json(
+    { success: true, data: items },
+    { headers: CORS_HEADERS }
+  );
 }
 
 // POST — Neues Item hinzufügen

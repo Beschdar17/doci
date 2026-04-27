@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Datenschutz | DOCI",
-  description: "Datenschutzerklärung der DOCI GmbH.",
+  description: "Datenschutzerklärung von DOCI Trockenbau.",
 };
 
 export default function DatenschutzPage() {

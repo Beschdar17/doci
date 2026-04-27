@@ -19,7 +19,8 @@ export function Gallery() {
   const [lightboxView, setLightboxView] = useState<"before" | "after">("before");
 
   useEffect(() => {
-    fetch("/api/admin/gallery")
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE ?? "";
+    fetch(`${apiBase}/api/admin/gallery`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

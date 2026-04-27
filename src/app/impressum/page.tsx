@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Impressum | DOCI",
-  description: "Impressum der DOCI GmbH gemäß § 5 DDG.",
+  description: "Impressum von DOCI Trockenbau gemäß § 5 DDG.",
 };
 
 export default function ImpressumPage() {
@@ -17,18 +17,14 @@ export default function ImpressumPage() {
           <h2 className="mb-3 text-xl font-semibold">
             Angaben gemäß § 5 DDG
           </h2>
-          {/* TODO: Vor Livegang mit echten Firmendaten ersetzen */}
           <p>
             {COMPANY_INFO.name}
+            <br />
+            {COMPANY_INFO.inhaber}
             <br />
             {COMPANY_INFO.street}
             <br />
             {COMPANY_INFO.zip} {COMPANY_INFO.city}
-          </p>
-          <p className="mt-3">
-            <strong>Vertreten durch:</strong>
-            <br />
-            Geschäftsführer: {COMPANY_INFO.geschaeftsfuehrer}
           </p>
         </section>
 
@@ -42,34 +38,13 @@ export default function ImpressumPage() {
           </p>
         </section>
 
-        {/* Handelsregister */}
-        <section>
-          <h2 className="mb-3 text-xl font-semibold">Handelsregister</h2>
-          <p>
-            Registergericht: {COMPANY_INFO.registergericht}
-            <br />
-            Registernummer: {COMPANY_INFO.registernummer}
-          </p>
-        </section>
-
-        {/* USt-ID */}
-        <section>
-          <h2 className="mb-3 text-xl font-semibold">Umsatzsteuer-ID</h2>
-          <p>
-            Umsatzsteuer-Identifikationsnummer gemäß § 27a
-            Umsatzsteuergesetz:
-            <br />
-            {COMPANY_INFO.ustIdNr}
-          </p>
-        </section>
-
         {/* Verantwortlich */}
         <section>
           <h2 className="mb-3 text-xl font-semibold">
             Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
           </h2>
           <p>
-            {COMPANY_INFO.geschaeftsfuehrer}
+            {COMPANY_INFO.inhaber}
             <br />
             {COMPANY_INFO.street}
             <br />

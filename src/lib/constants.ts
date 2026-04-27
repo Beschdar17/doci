@@ -6,13 +6,6 @@ export const NAV_LINKS = [
 
 export const SERVICES = [
   {
-    id: "stuckateur",
-    title: "Stuckateur- & Malerarbeiten",
-    description:
-      "Professionelle Stuck- und Malerarbeiten für Innen- und Außenbereiche. Wir verleihen Ihren Räumen neuen Glanz mit höchster Handwerksqualität.",
-    icon: "PaintBucket",
-  },
-  {
     id: "trockenbau",
     title: "Trockenbau",
     description:
@@ -34,13 +27,6 @@ export const SERVICES = [
     icon: "Building2",
   },
   {
-    id: "tapezieren",
-    title: "Tapezierarbeiten",
-    description:
-      "Fachgerechtes Tapezieren mit hochwertigen Materialien. Von klassischen Mustern bis zu modernen Designtapeten – präzise und sauber verarbeitet.",
-    icon: "Wallpaper",
-  },
-  {
     id: "boden",
     title: "Bodenlegearbeiten",
     description:
@@ -50,31 +36,25 @@ export const SERVICES = [
 ] as const;
 
 export const COMPANY_INFO = {
-  name: "DOCI GmbH",
-  street: "Musterstraße 1",
-  zip: "12345",
-  city: "Musterstadt",
+  name: "DOCI Trockenbau",
+  inhaber: "Edmond Doci",
+  street: "Imweg 50",
+  zip: "70329",
+  city: "Stuttgart",
   phone: "0176 62567186",
-  email: "info@doci.de",
-  geschaeftsfuehrer: "Max Mustermann",
-  registergericht: "Amtsgericht Musterstadt",
-  registernummer: "HRB 12345",
-  ustIdNr: "DE123456789",
+  email: "info@doci-trockenbau.de",
 } as const;
 
 export const GALLERY_CATEGORIES = [
   "Alle",
-  "Stuckateur",
   "Trockenbau",
   "Sanierung",
   "Boden",
 ] as const;
 
 export const GALLERY_ITEMS = [
-  { id: 1, category: "Stuckateur", title: "Stuckarbeiten Altbau" },
   { id: 2, category: "Trockenbau", title: "Büroausbau Trockenbau" },
   { id: 3, category: "Sanierung", title: "Altbausanierung Gründerzeit" },
   { id: 4, category: "Boden", title: "Parkettverlegung Eiche" },
-  { id: 5, category: "Stuckateur", title: "Fassadengestaltung" },
   { id: 6, category: "Sanierung", title: "Komplettsanierung Wohnung" },
 ] as const;

@@ -20,7 +20,7 @@ export function Footer() {
               />
             </div>
             <p className="text-sm text-white/60">
-              Ihr kompetenter Partner für Stuckateur- und Sanierungsarbeiten.
+              Ihr kompetenter Partner für Trockenbau- und Sanierungsarbeiten.
               Qualität und Zuverlässigkeit seit Jahren.
             </p>
           </div>
